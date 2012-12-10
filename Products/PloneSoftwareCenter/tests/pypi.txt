@@ -252,6 +252,10 @@ Now let's upload the egg::
     ...         'md5_digest': 'd41d8cd98f00b204e9800998ecf8427e',
     ...         'filetype': 'sdist', 'pyversion': '', 
     ...         'content': tarball, 'version': '0.2.3', 
+    ...         'classifiers': ['Programming Language :: Python',
+    ...                         'Framework :: Plone :: 4.1',
+    ...                         'Framework :: Plone :: 4.2'],
+    ...         'keywords': 'plone add-on',
     ...         'name': 'iw.fss', 
     ...         'description': 'this is **not rest**'}
     >>> request = TestRequest(form=form)
@@ -267,6 +271,15 @@ We should have many releases now in this single project::
 
 The main egg doesn't have a prefix so PloneHelpCenter works with it.
 Secondary eggs have the name of the package as a prefix for the release id.
+
+We should have mapping done between pypi's classifiers and psc's compatibility
+and between pypi's keywords and psc's categories.
+
+    >>> project.getCategories()
+    ('add-on',)
+    >>> releases['iw.fss-0.2.3'].getCompatibility()
+    ('Plone 4.1', 'Plone 4.2')
+
 
 Getting the release
 ===================
