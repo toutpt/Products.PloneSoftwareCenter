@@ -349,6 +349,7 @@ class PyPIView(BrowserView):
 
         release = releases._getOb(version)
         self._map_classifiers_to_compatibility(project, release)
+        self._map_keywords_to_categories(project, release)
 
         return project, release
 
@@ -373,6 +374,18 @@ class PyPIView(BrowserView):
                 compats.append(version)
         if compats:
             release.setCompatibility(compats)
+
+    def _map_keywords_to_categories(self, project, release):
+        """This map keywords from setup.py to categories defined in PSC"""
+        project_cat = list(project.getCategories())
+        available_cat = project.getCategoriesVocab()
+        keywords = self.request.form.get('keywords', '').split(' ')
+
+        for keyword in keywords:
+            if keyword in available_cat and keyword not in project_cat:
+                project_cat.append(keyword)
+
+        project.setCategories(project_cat)
 
     def _get_classifiers(self):
         """returns current classifiers"""
